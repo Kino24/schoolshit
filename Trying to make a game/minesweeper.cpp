@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
+#pragma comment(lib, "Winmm.lib")
 
 using namespace std;
 
@@ -13,8 +14,25 @@ using namespace std;
 
  int showRow(char *hideRow, int xAxis, int yAxis, int key, int size)
  {
+    
     int temp=xAxis +(yAxis*5);
         system("cls");
+    cout<<"CONTROLS: UP,DOWN,LEFT,RIGHT,ENTER"<<endl;
+    for(int i=0;i<size;i++)
+    {
+        if(i%5==0&&i!=0)
+            cout<<endl; 
+        if(i!=temp)
+            cout<<*(hideRow+i)<<" ";
+        else
+        {
+            SetConsoleTextAttribute(hConsole, 112);
+            cout<<*(hideRow+i);
+            SetConsoleTextAttribute(hConsole, 7);
+            cout<<" ";
+        }     
+    }
+    /*
         for(int i=0;i<5;i++)
             if(i==xAxis&&yAxis==0)
             {
@@ -70,8 +88,8 @@ using namespace std;
             else
                 cout<<*(hideRow+(i+20))<<" ";
         cout<<endl;
-        temp=xAxis +(yAxis*5);
-
+    */
+    cout<<endl;
     return(temp);
  }
 
@@ -89,6 +107,18 @@ char countBombs(int *row, char *hideRow,int xAxis, int yAxis, int size,int temp)
                     if(*(row+(temp+5))==1)
                         bombcount++;
                     if(*(row+(temp+6))==1)
+                        bombcount++;
+                    break;
+                case 1: case 2: case 3:
+                    if(*(row+temp+1)==1)
+                        bombcount++;
+                    if(*(row+temp+5)==1)
+                        bombcount++;
+                    if(*(row+temp-5)==1)
+                        bombcount++;
+                    if(*(row+temp-4)==1)
+                        bombcount++;
+                    if(*(row+temp+6)==1)
                         bombcount++;
                     break;
                 case 4:
@@ -112,6 +142,18 @@ char countBombs(int *row, char *hideRow,int xAxis, int yAxis, int size,int temp)
                     if(*(row+(temp+5))==1)
                         bombcount++;
                     if(*(row+(temp+4))==1)
+                        bombcount++;
+                    break;
+                case 1: case 2: case 3:
+                    if(*(row+temp-1)==1)
+                        bombcount++;
+                    if(*(row+temp+5)==1)
+                        bombcount++;
+                    if(*(row+temp-5)==1)
+                        bombcount++;
+                    if(*(row+temp+4)==1)
+                        bombcount++;
+                    if(*(row+temp-6)==1)
                         bombcount++;
                     break;
                 case 4:
@@ -227,13 +269,18 @@ int main()
     }
 
     if(gameOver)
-    cout<<"GAME OVER!"<<endl<<"BOMB LOCATIONS:"<<endl;
+    {
+        cout<<"GAME OVER!"<<endl<<"BOMB LOCATIONS:"<<endl;
         for(int i=0;i<5;i++)
         {
             for(int j=0;j<5;j++)
                 cout<<row[i][j]<<" ";
             cout<<endl;
         }
+        PlaySound(TEXT("MineDumbass.wav"),NULL,SND_SYNC);
+        system("pause");
+    }
+    
   
     return 0;
 }
